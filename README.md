@@ -9,6 +9,10 @@
 
 # jupyterhub-deploy-docker
 
+This deployment uses [jupyterhub-nativeauthenticator](https://native-authenticator.readthedocs.io/en/latest/quickstart.html)
+
+### jupyterhub-nativeauthenticator 
+
 **jupyterhub-deploy-docker** provides a reference
 deployment of [JupyterHub](https://github.com/jupyter/jupyterhub), a
 multi-user [Jupyter Notebook](http://jupyter.org/) environment, on a
@@ -56,6 +60,8 @@ Key components of this reference deployment are:
 
 ![JupyterHub single host Docker deployment](internal/jupyterhub-docker.png)
 
+📝 Please ignore the Github authentication shown above as not used in this repo.
+Refer to orginal repository for more information on this.
 
 ## Prerequisites
 
@@ -85,24 +91,32 @@ certificate and key file in the JupyterHub configuration. To configure:
 1. Obtain the domain name that you wish to use for JupyterHub, for
    example, `myfavoritesite.com` or `jupiterplanet.org`.
 
-1. If you do not have an existing certificate and key, you can:
-
+2. If you do not have an existing certificate and key, you can:
    - obtain one from [Let's Encrypt](https://letsencrypt.org) using
      the [certbot](https://certbot.eff.org) client,
    - use the helper script in this repo's [letsencrypt example](examples/letsencrypt/README.md), or
    - [create a self-signed certificate](https://jupyter-notebook.readthedocs.org/en/latest/public_server.html#using-ssl-for-encrypted-communication).
 
-1. Copy the certificate and key files to a
+3. Copy the certificate and key files to a
    directory named `secrets` in this repository's root directory.  These will be
    added to the JupyterHub Docker image at build time. For example, create a
    `secrets` directory in the root of this repo and copy the certificate and
-   key files (`jupyterhub.crt` and `jupyterhub.key`) to this directory:
+   key files (`jupyterhub.pem` and `jupyterhub.key`) to this directory:
 
    ```bash
    mkdir -p secrets
-   cp jupyterhub.crt jupyterhub.key secrets/
+   cp jupyterhub.pem jupyterhub.key secrets/
    ```
 
+
+### In this repo to create the keys I used self signed certificate above
+
+1. Create the .pem and .key
+`openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mykey.key -out mycert.pem`
+
+2. move both to secrets folder
+`mv mykey.key secrets/`
+`mv mycert.pem secrets/`
 
 ## Authenticator setup
 
